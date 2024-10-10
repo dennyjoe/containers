@@ -1,0 +1,14 @@
+version: '3.9'
+
+networks:
+  gateway:
+    external: true
+    name: gateway
+
+services:
+  web-check:
+    container_name: web-check
+    image: lissy93/web-check
+    restart: unless-stopped
+    networks:
+      - gateway
