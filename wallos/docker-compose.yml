@@ -11,6 +11,8 @@ services:
     image: bellamy/wallos:latest
     environment:
       TZ: $TZ
+    networks:
+      - gateway
     volumes:
       - $INSTALL_DIR/db:/var/www/html/db
       - $INSTALL_DIR/logos:/var/www/html/images/uploads/logos
