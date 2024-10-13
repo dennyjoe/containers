@@ -1,0 +1,17 @@
+version: '3.9'
+
+networks:
+  gateway:
+    external: true
+    name: gateway
+
+services:
+  wallos:
+    container_name: wallos
+    image: bellamy/wallos:latest
+    environment:
+      TZ: $TZ
+    volumes:
+      - $INSTALL_DIR/db:/var/www/html/db
+      - $INSTALL_DIR/logos:/var/www/html/images/uploads/logos
+    restart: unless-stopped
