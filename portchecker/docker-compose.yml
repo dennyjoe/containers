@@ -1,0 +1,38 @@
+---
+version: "3.8"
+
+networks:
+  portchecker_backend:
+    name: portchecker_backend
+  gateway:
+    external: true
+    name: gateway
+
+services:
+  web:
+    image: ghcr.io/dsgnr/portcheckerio-web:latest
+    container_name: web
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-S", "http://web"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    depends_on:
+      - api  # Ensure api service is ready before web starts
+    networks:
+      - portchecker_backend
+      - gateway
+  api:
+    image: ghcr.io/dsgnr/portcheckerio-api:latest
+    container_name: api
+    environment:
+      - ALLOW_PRIVATE=false  # Prevent usage of private IP addresses
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-S", "http://api:8000/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    networks:
+      - portchecker_backend
