@@ -11,7 +11,7 @@ networks:
 services:
   web:
     image: ghcr.io/dsgnr/portcheckerio-web:latest
-    container_name: web
+    container_name: portchecker_web
     healthcheck:
       test: ["CMD", "wget", "--spider", "-S", "http://web"]
       interval: 30s
@@ -25,7 +25,7 @@ services:
       - gateway
   api:
     image: ghcr.io/dsgnr/portcheckerio-api:latest
-    container_name: api
+    container_name: portchecker_api
     environment:
       - ALLOW_PRIVATE=false  # Prevent usage of private IP addresses
     healthcheck:
