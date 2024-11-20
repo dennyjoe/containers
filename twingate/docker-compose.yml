@@ -1,0 +1,17 @@
+services:
+  twingate_connector:
+    container_name: twingate
+    restart: unless-stopped
+    image: twingate/connector:$VERSION
+    environment:
+      - TWINGATE_NETWORK=$TWINGATE_NETWORK
+      - TWINGATE_ACCESS_TOKEN=$TWINGATE_ACCESS_TOKEN
+      - TWINGATE_REFRESH_TOKEN=$TWINGATE_REFRESH_TOKEN
+      - TWINGATE_LOG_ANALYTICS=v2
+      - TWINGATE_LOG_LEVEL=3
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://172.16.20.11:7514"
+        syslog-format: "rfc3164"
+        tag: "twingate"
