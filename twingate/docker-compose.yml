@@ -2,7 +2,7 @@ services:
   twingate_connector:
     container_name: twingate
     restart: unless-stopped
-    image: "twingate/connector:latest"
+    image: twingate/connector:$VERSION
     environment:
       - TWINGATE_NETWORK=$TWINGATE_NETWORK
       - TWINGATE_ACCESS_TOKEN=$TWINGATE_ACCESS_TOKEN
