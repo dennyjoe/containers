@@ -1,6 +1,6 @@
 services:
   twingate_connector:
-    container_name: twingate
+    container_name: uppish-muskrat
     restart: unless-stopped
     image: twingate/connector:$VERSION
     environment:
