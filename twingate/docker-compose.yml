@@ -1,14 +1,19 @@
 services:
   twingate_connector:
-    container_name: uppish-muskrat
-    restart: unless-stopped
+    container_name: twingate
+    restart: always
     image: twingate/connector:$VERSION
     environment:
+      - SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+      - TWINGATE_API_ENDPOINT=/connector.stock
       - TWINGATE_NETWORK=$TWINGATE_NETWORK
       - TWINGATE_ACCESS_TOKEN=$TWINGATE_ACCESS_TOKEN
       - TWINGATE_REFRESH_TOKEN=$TWINGATE_REFRESH_TOKEN
       - TWINGATE_LOG_ANALYTICS=v2
       - TWINGATE_LOG_LEVEL=3
+      - TWINGATE_LABEL_HOSTNAME=twingate  # Set the environment variable "TWINGATE_LABEL_HOSTNAME"
+    sysctls:
+        - "net.ipv4.ping_group_range=0 65535"  # Set the sysctl parameter "net.ipv4.ping_group_range" to allow user IDs in the range 0 to 65535 to create ICMP echo request (ping) sockets
     logging:
       driver: syslog
       options:
