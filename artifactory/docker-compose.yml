@@ -1,22 +1,40 @@
 version: '3.8'
 
 networks:
+  artifactory_backend:
+    name: artifactory_backend
   gateway:
     external: true
     name: gateway
 
 services:
+  postgres:
+    image: postgres:13
+    container_name: artifactory_postgres
+    environment:
+      - POSTGRES_DB=artifactory
+      - POSTGRES_USER=artifactory
+      - POSTGRES_PASSWORD=password  # Change this to a secure password
+    volumes:
+      - $INSTALL_DIR/db:/var/lib/postgresql/data
+    networks:
+      - artifactory_backend
+    restart: unless-stopped
   artifactory:
     image: docker.bintray.io/jfrog/artifactory-oss:latest
     container_name: artifactory
-    #ports:
-    #  - "8081:8081"
-    #  - "8082:8082"
     volumes:
-      - $INSTALL_DIR:/var/opt/jfrog/artifactory
+      - $INSTALL_DIR/data:/var/opt/jfrog/artifactory
     user: "1030:1030"
     networks:
       - gateway
+      - artifactory_backend
     environment:
       - EXTRA_JAVA_OPTIONS=-Xms512m -Xmx2g
+      - DB_TYPE=postgresql
+      - DB_USER=artifactory
+      - DB_PASSWORD=password  # Use the same password as set for PostgreSQL
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=artifactory
     restart: unless-stopped
