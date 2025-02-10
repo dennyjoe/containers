@@ -14,6 +14,7 @@ services:
     #  - "8082:8082"
     volumes:
       - $INSTALL_DIR:/var/opt/jfrog/artifactory
+    user: "1030:1030"
     networks:
       - gateway
     environment:
