@@ -7,6 +7,7 @@ networks:
 
 services:
   postgres:
+    container_name: postgres_linkwarden
     image: postgres:16-alpine
     restart: unless_stopped
     volumes:
@@ -24,6 +25,7 @@ services:
       - AUTHENTIK_CLIENT_SECRET=$AUTHENTIK_CLIENT_SECRET
       - DATABASE_URL=$DATABASE_URL
     restart: unless_stopped
+    container_name: linkwarden
     image: ghcr.io/linkwarden/linkwarden:latest
     volumes:
       - $INSTALL_DIR/app:/data/data
