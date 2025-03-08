@@ -10,20 +10,25 @@ services:
     container_name: postgres_linkwarden
     image: postgres:16-alpine
     restart: unless-stopped
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
     volumes:
       - $INSTALL_DIR/db:/var/lib/postgresql/data
     networks:
       - linkwarden
   linkwarden:
     environment:
-      - NEXTAUTH_URL=$NEXTAUTH_URL
-      - NEXTAUTH_SECRET=$NEXTAUTH_SECRET
-      - NEXT_PUBLIC_AUTHENTIK_ENABLED=true
-      - AUTHENTIK_CUSTOM_NAME=
-      - AUTHENTIK_ISSUER=$AUTHENTIK_ISSUER
-      - AUTHENTIK_CLIENT_ID=$AUTHENTIK_CLIENT_ID
-      - AUTHENTIK_CLIENT_SECRET=$AUTHENTIK_CLIENT_SECRET
-      - DATABASE_URL=$DATABASE_URL
+      NEXTAUTH_URL: $NEXTAUTH_URL
+      NEXTAUTH_SECRET: $NEXTAUTH_SECRET
+      NEXT_PUBLIC_AUTHENTIK_ENABLED: true
+      AUTHENTIK_CUSTOM_NAME:
+      AUTHENTIK_ISSUER: $AUTHENTIK_ISSUER
+      AUTHENTIK_CLIENT_ID: $AUTHENTIK_CLIENT_ID
+      AUTHENTIK_CLIENT_SECRET: $AUTHENTIK_CLIENT_SECRET
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
     restart: unless-stopped
     container_name: linkwarden
     image: ghcr.io/linkwarden/linkwarden:latest
