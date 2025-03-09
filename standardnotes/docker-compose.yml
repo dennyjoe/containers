@@ -3,6 +3,19 @@ services:
     image: standardnotes/server
     container_name: server_self_hosted
     restart: unless-stopped
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USERNAME=std_notes_user
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_DATABASE=standard_notes_db
+      - DB_TYPE=mysql
+      - REDIS_PORT=6379
+      - REDIS_HOST=cache
+      - CACHE_TYPE=redis
+      - AUTH_JWT_SECRET=$AUTH_JWT_SECRET
+      - AUTH_SERVER_ENCRYPTION_SERVER_KEY=$AUTH_SERVER_ENCRYPTION_SERVER_KEY
+      - VALET_TOKEN_SECRET=$VALET_TOKEN_SECRET
     ports:
       - 3000:3000
       - 3125:3104
@@ -34,8 +47,8 @@ services:
     environment:
       - MYSQL_DATABASE=standard_notes_db
       - MYSQL_USER=std_notes_user
-      - MYSQL_ROOT_PASSWORD=changeme123
-      - MYSQL_PASSWORD=changeme123
+      - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
+      - MYSQL_PASSWORD=$DB_PASSWORD
     expose:
       - 3306
     restart: unless-stopped
