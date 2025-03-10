@@ -17,9 +17,9 @@ services:
       - AUTH_JWT_SECRET=$AUTH_JWT_SECRET
       - AUTH_SERVER_ENCRYPTION_SERVER_KEY=$AUTH_SERVER_ENCRYPTION_SERVER_KEY
       - VALET_TOKEN_SECRET=$VALET_TOKEN_SECRET
-    ports:
-      - 3000:3000 # sync service
-      - 3125:3104 # files service
+#    ports:
+#      - 3000:3000 - sync service
+#      - 3125:3104 - files service
     volumes:
       - $INSTALL_DIR/logs:/var/lib/server/logs
       - $INSTALL_DIR/uploads:/opt/server/packages/files/dist/uploads
