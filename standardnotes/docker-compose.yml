@@ -13,15 +13,26 @@ services:
       - REDIS_PORT=6379
       - REDIS_HOST=cache
       - CACHE_TYPE=redis
+      - PUBLIC_FILES_SERVER_URL=$PUBLIC_FILES_SERVER_URL
       - AUTH_JWT_SECRET=$AUTH_JWT_SECRET
       - AUTH_SERVER_ENCRYPTION_SERVER_KEY=$AUTH_SERVER_ENCRYPTION_SERVER_KEY
       - VALET_TOKEN_SECRET=$VALET_TOKEN_SECRET
     ports:
-      - 3000:3000
-      - 3125:3104
+      - 3000:3000 # sync service
+      - 3125:3104 # files service
     volumes:
       - $INSTALL_DIR/logs:/var/lib/server/logs
       - $INSTALL_DIR/uploads:/opt/server/packages/files/dist/uploads
+    networks:
+      - standardnotes_self_hosted
+      - gateway
+
+  web:
+    image: standardnotes/web
+    container_name: web_self_hosted
+    restart: unless-stopped
+    #ports:
+    #  - 3001:80
     networks:
       - standardnotes_self_hosted
       - gateway
