@@ -29,6 +29,8 @@ services:
       AUTHENTIK_CLIENT_SECRET: $AUTHENTIK_CLIENT_SECRET
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
+      NEXT_PUBLIC_OLLAMA_ENDPOINT_URL: $NEXT_PUBLIC_OLLAMA_ENDPOINT_URL
+      OLLAMA_MODEL: $OLLAMA_MODEL
     restart: unless-stopped
     container_name: linkwarden
     image: ghcr.io/linkwarden/linkwarden:latest
