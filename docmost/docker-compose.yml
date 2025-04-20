@@ -18,7 +18,7 @@ services:
       REDIS_URL: "redis://redis:6379"
     restart: unless-stopped
     volumes:
-      - $INSTALL_DIR/docmost:/app/data/storage
+      - $INSTALL_DIR/app:/app/data/storage
     networks:
       - docmost
       - gateway
