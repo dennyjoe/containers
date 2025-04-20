@@ -1,0 +1,44 @@
+networks:
+  docmost:
+    name: docmost
+  gateway:
+    external: true
+    name: gateway
+
+services:
+  docmost:
+    image: docmost/docmost:latest
+    depends_on:
+      - db
+      - redis
+    environment:
+      APP_URL: $APP_URL
+      APP_SECRET: $APP_SECRET
+      DATABASE_URL: "postgresql://docmost:${POSTGRES_PASSWORD}@db:5432/docmost?schema=public"
+      REDIS_URL: "redis://redis:6379"
+    restart: unless-stopped
+    volumes:
+      - $INSTALL_DIR/docmost:/app/data/storage
+    networks:
+      - docmost
+      - gateway
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: docmost
+      POSTGRES_USER: docmost
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    restart: unless-stopped
+    volumes:
+      - $INSTALL_DIR/db:/var/lib/postgresql/data
+    networks:
+      - docmost
+
+  redis:
+    image: redis:7.2-alpine
+    restart: unless-stopped
+    volumes:
+      - $INSTALL_DIR/redis:/data
+    networks:
+      - docmost
