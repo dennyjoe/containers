@@ -1,0 +1,14 @@
+version: '3.9'
+
+networks:
+  gateway:
+    external: true
+    name: gateway
+
+services:
+  omni-tools:
+    image: iib0011/omni-tools:latest
+    container_name: omni-tools
+    restart: unless-stopped
+    networks:
+      - gateway
