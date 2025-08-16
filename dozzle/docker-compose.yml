@@ -13,6 +13,12 @@ services:
     environment:
       DOZZLE_AUTH_PROVIDER: simple
       DOZZLE_REMOTE_AGENT: ${DOZZLE_REMOTE_AGENTS}
+    healthcheck:
+      test: ["CMD", "/dozzle", "healthcheck"]
+      interval: 3s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
     restart: unless-stopped
     networks:
       - gateway
