@@ -1,3 +1,8 @@
+networks:
+  gateway:
+    external: true
+    name: gateway
+
 services:
   dozzle:
     container_name: dozzle
@@ -8,3 +13,6 @@ services:
     environment:
       DOZZLE_AUTH_PROVIDER: simple
       DOZZLE_REMOTE_AGENT: ${DOZZLE_REMOTE_AGENTS}
+    restart: unless-stopped
+    networks:
+      - gateway
