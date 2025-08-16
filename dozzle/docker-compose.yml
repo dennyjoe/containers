@@ -1,0 +1,10 @@
+services:
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:${VERSION}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $INSTALL_DIR/data:/data
+    environment:
+      DOZZLE_AUTH_PROVIDER: simple
+      DOZZLE_REMOTE_AGENT: ${DOZZLE_REMOTE_AGENTS}
