@@ -1,8 +1,6 @@
 version: "3.9"
 
 networks:
-  rackpeek:
-    name: rackpeek
   gateway:
     external: true
     name: gateway
@@ -15,4 +13,4 @@ services:
       - $INSTALL_DIR/rackpeek:/app/config
     restart: unless-stopped
     networks:
-      - rackpeek
+      - gateway
