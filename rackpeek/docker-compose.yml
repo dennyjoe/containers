@@ -1,0 +1,18 @@
+version: "3.9"
+
+networks:
+  rackpeek:
+    name: rackpeek
+  gateway:
+    external: true
+    name: gateway
+
+services:
+  rackpeek:
+    image: aptacode/rackpeek:latest
+    container_name: rackpeek
+    volumes:
+      - $INSTALL_DIR/rackpeek:/app/config
+    restart: unless-stopped
+    networks:
+      - rackpeek
