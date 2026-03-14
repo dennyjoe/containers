@@ -34,11 +34,11 @@ services:
       - APP_PORT=22300
       - APP_BASE_URL=${APP_BASE_URL}
       - DB_CLIENT=pg
-      - DB_HOST=joplin-db
-      #- DB_PORT=5432
-      - DB_DATABASE=joplin
-      - DB_USER=joplin
-      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=joplin-db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DATABASE=joplin
+      - POSTGRES_USER=joplin
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - MAILER_ENABLED=${MAILER_ENABLED:-0}
       - MAILER_HOST=${MAILER_HOST:-}
       - MAILER_PORT=${MAILER_PORT:-}
