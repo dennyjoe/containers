@@ -1,0 +1,55 @@
+version: "3.6"
+
+networks:
+  joplin_backend:
+    name: joplin_backend
+  gateway:
+    external: true
+    name: gateway
+  cloudflare_tunnel:
+    external: true
+    name: cloudflare_tunnel
+
+services:
+  joplin-db:
+    container_name: joplin-db
+    image: postgres:16
+    restart: unless-stopped
+    volumes:
+      - /mnt/docker/joplin/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=joplin
+      - POSTGRES_USER=joplin
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - joplin_backend
+
+  joplin-server:
+    container_name: joplin-server
+    image: joplin/server:latest
+    restart: unless-stopped
+    depends_on:
+      - joplin-db
+    environment:
+      - APP_PORT=22300
+      - APP_BASE_URL=${APP_BASE_URL}
+      - DB_CLIENT=pg
+      - DB_HOST=joplin-db
+      - DB_PORT=5432
+      - DB_DATABASE=joplin
+      - DB_USER=joplin
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - MAILER_ENABLED=${MAILER_ENABLED:-0}
+      - MAILER_HOST=${MAILER_HOST:-}
+      - MAILER_PORT=${MAILER_PORT:-}
+      - MAILER_SECURITY=${MAILER_SECURITY:-}
+      - MAILER_AUTH_USER=${MAILER_AUTH_USER:-}
+      - MAILER_AUTH_PASSWORD=${MAILER_AUTH_PASSWORD:-}
+      - MAILER_NOREPLY_NAME=${MAILER_NOREPLY_NAME:-}
+      - MAILER_NOREPLY_EMAIL=${MAILER_NOREPLY_EMAIL:-}
+    volumes:
+      - /mnt/docker/joplin/data:/home/joplin/data
+    networks:
+      - joplin_backend
+      - gateway
+      - cloudflare_tunnel
