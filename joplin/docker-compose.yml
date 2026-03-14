@@ -21,6 +21,8 @@ services:
       - POSTGRES_DB=joplin
       - POSTGRES_USER=joplin
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    env_file:
+      - stack.env
     networks:
       - joplin_backend
 
@@ -47,6 +49,8 @@ services:
       - MAILER_AUTH_PASSWORD=${MAILER_AUTH_PASSWORD:-}
       - MAILER_NOREPLY_NAME=${MAILER_NOREPLY_NAME:-}
       - MAILER_NOREPLY_EMAIL=${MAILER_NOREPLY_EMAIL:-}
+    env_file:
+      - stack.env
     volumes:
       - /mnt/docker/joplin/data:/home/joplin/data
     networks:
