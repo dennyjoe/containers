@@ -35,7 +35,7 @@ services:
       - APP_BASE_URL=${APP_BASE_URL}
       - DB_CLIENT=pg
       - DB_HOST=joplin-db
-      - DB_PORT=5432
+      #- DB_PORT=5432
       - DB_DATABASE=joplin
       - DB_USER=joplin
       - DB_PASSWORD=${POSTGRES_PASSWORD}
