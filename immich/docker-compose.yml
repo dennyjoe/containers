@@ -1,11 +1,18 @@
 name: immich
 
+networks:
+  immich_backend:
+    name: immich_backend
+  gateway:
+    external: true
+    name: gateway
+
 services:
   immich-server:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
     volumes:
-      - ${UPLOAD_LOCATION}:/data
+      - ${INSTALL_DIR}/data:/data
       - /etc/localtime:/etc/localtime:ro
     depends_on:
       - redis
@@ -13,6 +20,9 @@ services:
     restart: always
     healthcheck:
       disable: false
+    networks:
+      - immich_backend
+      - gateway
 
   redis:
     container_name: immich_redis
@@ -20,6 +30,8 @@ services:
     healthcheck:
       test: redis-cli ping || exit 1
     restart: always
+    networks:
+      - immich_backend
 
   database:
     container_name: immich_postgres
@@ -30,8 +42,10 @@ services:
       POSTGRES_DB: ${DB_DATABASE_NAME}
       POSTGRES_INITDB_ARGS: '--data-checksums'
     volumes:
-      - ${DB_DATA_LOCATION}:/var/lib/postgresql/data
+      - ${INSTALL_DIR}/db:/var/lib/postgresql/data
     shm_size: 128mb
     restart: always
     healthcheck:
       disable: false
+    networks:
+      - immich_backend
