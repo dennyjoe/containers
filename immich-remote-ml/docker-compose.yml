@@ -1,0 +1,19 @@
+name: immich-remote-ml
+
+services:
+  immich-machine-learning:
+    container_name: immich_machine_learning
+    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}-cuda
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu]
+    volumes:
+      - $INSTALL_DIR/immich-remote-ml:/cache
+    restart: unless-stopped
+    ports:
+      - 3003:3003
