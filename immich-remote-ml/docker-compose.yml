@@ -4,6 +4,8 @@ services:
   immich-machine-learning:
     container_name: immich_machine_learning
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}-cuda
+    environment:
+      - GUNICORN_CMD_ARGS=--no-control-socket=value
     runtime: nvidia
     deploy:
       resources:
