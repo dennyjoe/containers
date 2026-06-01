@@ -1,0 +1,42 @@
+version: '3'
+
+networks:
+  jellystat_backend:
+    name: jellystat_backend
+  gateway:
+    external: true
+    name: gateway
+
+services:
+  jellystat-db:
+    image: 'postgres:15.2'
+    shm_size: 1gb
+    container_name: jellystat-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - '${INSTALL_DIR}/db:/var/lib/postgresql/data'
+    networks:
+      - jellystat_backend
+  jellystat:
+    image: 'cyfershepard/jellystat:latest'
+    container_name: jellystat
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_IP: jellystat-db
+      POSTGRES_PORT: 5432
+      JWT_SECRET: ${JWT_SECRET}
+      TZ: Europe/London
+    volumes:
+      - '${INSTALL_DIR}/backup-data:/app/backend/backup-data'
+    ports:
+      - '3000:3000'
+    depends_on:
+      - jellystat-db
+    networks:
+      - jellystat_backend
+      - gateway
