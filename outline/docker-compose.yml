@@ -1,0 +1,82 @@
+networks:
+  outline_backend:
+    name: outline_backend
+  gateway:
+    external: true
+    name: gateway
+
+services:
+  outline:
+    container_name: outline
+    image: outlinewiki/outline:latest
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+      - minio
+    environment:
+      APP_URL: $APP_URL
+      APP_NAME: $APP_NAME
+      PORT: 3000
+      FORCE_HTTPS: true
+      SECRET_KEY: $SECRET_KEY
+      UTILS_SECRET: $UTILS_SECRET
+      DATABASE_URL: postgres://outline:${POSTGRES_PASSWORD}@postgres:5432/outline
+      PGSSLMODE: disable
+      REDIS_URL: redis://redis:6379
+      OIDC_CLIENT_ID: $OIDC_CLIENT_ID
+      OIDC_CLIENT_SECRET: $OIDC_CLIENT_SECRET
+      OIDC_AUTH_URI: $OIDC_AUTH_URI
+      OIDC_TOKEN_URI: $OIDC_TOKEN_URI
+      OIDC_USERINFO_URI: $OIDC_USERINFO_URI
+      OIDC_LOGOUT_URI: $OIDC_LOGOUT_URI
+      OIDC_SCOPES: openid profile email
+      OIDC_DISPLAY_NAME: $OIDC_DISPLAY_NAME
+      FILE_STORAGE: s3
+      AWS_S3_UPLOAD_BUCKET_URL: http://minio:9000
+      AWS_S3_UPLOAD_BUCKET_NAME: outline
+      AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+      AWS_REGION: us-east-1
+      AWS_S3_FORCE_PATH_STYLE: true
+      DEFAULT_ACCESS: members
+    volumes:
+      - $INSTALL_DIR/app:/var/lib/outline/data
+    networks:
+      - outline_backend
+      - gateway
+
+  postgres:
+    container_name: outline_postgres
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: outline
+      POSTGRES_USER: outline
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    volumes:
+      - $INSTALL_DIR/db:/var/lib/postgresql/data
+    networks:
+      - outline_backend
+
+  redis:
+    container_name: outline_redis
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - $INSTALL_DIR/redis:/data
+    networks:
+      - outline_backend
+
+  minio:
+    container_name: outline_minio
+    image: bitnami/minio:latest
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: $AWS_ACCESS_KEY_ID
+      MINIO_ROOT_PASSWORD: $AWS_SECRET_ACCESS_KEY
+      MINIO_DEFAULT_BUCKETS: outline
+    volumes:
+      - $INSTALL_DIR/minio:/data
+    networks:
+      - outline_backend
