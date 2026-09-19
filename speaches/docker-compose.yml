@@ -1,0 +1,26 @@
+services:
+  speaches:
+    container_name: speaches
+    image: ghcr.io/speaches-ai/speaches:latest-cuda
+    restart: unless-stopped
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    ports:
+      - "9900:8000"
+    volumes:
+      - $INSTALL_DIR/hf-cache:/home/ubuntu/.cache/huggingface/hub
+    environment:
+      PRELOAD_MODELS: '["Systran/faster-whisper-large-v3"]'
+      STT_MODEL_TTL: -1
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://0.0.0.0:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
